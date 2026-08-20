@@ -114,10 +114,66 @@ export default function Home() {
   const answered = useMemo(() => answers.every((answer) => answer.trim().length > 2), [answers]);
 
   if (screen === 1) {
-    return <Round driver="Student 1" navigator="Student 2" onBack={() => setScreen(0)} onDone={() => setScreen(2)} />;
+    return (
+      <main className="shell">
+        <header className="topbar">
+          <span className="eyebrow">Example first</span>
+          <span className="time-chip">Read it together</span>
+        </header>
+        <section className="panel example-panel">
+          <h1>Watch how it sounds</h1>
+          <p className="lead">Student 1 is the Driver. Student 2 is the Navigator.</p>
+
+          <div className="conversation" aria-label="Example conversation between a Driver and Navigator">
+            <div className="speech driver-speech">
+              <span>Driver</span>
+              <p>&quot;I am showing Ball 1.&quot;</p>
+            </div>
+            <div className="speech navigator-speech">
+              <span>Navigator</span>
+              <p>&quot;Okay. Which key does it use?&quot;</p>
+            </div>
+            <div className="speech driver-speech">
+              <span>Driver</span>
+              <p>&quot;It uses the D key. When I click the green flag, the ball starts at the top and moves down.&quot;</p>
+            </div>
+            <div className="speech navigator-speech">
+              <span>Navigator</span>
+              <p>&quot;Let&apos;s test it.&quot;</p>
+            </div>
+            <div className="speech driver-speech">
+              <span>Driver</span>
+              <p>&quot;I clicked the green flag. Ball 1 moved down. I pressed D at the goal, and the score went up by 1.&quot;</p>
+            </div>
+            <div className="speech navigator-speech">
+              <span>Navigator</span>
+              <p>&quot;It works because I saw the ball move and the score change.&quot;</p>
+            </div>
+            <div className="speech driver-speech">
+              <span>Driver</span>
+              <p>&quot;Thank you for checking. I am ready to switch.&quot;</p>
+            </div>
+          </div>
+
+          <div className="example-lesson">
+            <strong>What made this good?</strong>
+            <p>The Driver showed one small part. The Navigator asked one clear question. They tested the game together.</p>
+          </div>
+
+          <div className="actions">
+            <button className="button secondary" onClick={() => setScreen(0)}>Back</button>
+            <button className="button primary" onClick={() => setScreen(2)}>Now we try it</button>
+          </div>
+        </section>
+      </main>
+    );
   }
 
   if (screen === 2) {
+    return <Round driver="Student 1" navigator="Student 2" onBack={() => setScreen(1)} onDone={() => setScreen(3)} />;
+  }
+
+  if (screen === 3) {
     return (
       <main className="shell center-screen">
         <section className="panel switch-panel">
@@ -130,19 +186,19 @@ export default function Home() {
           </div>
           <p className="lead">Student 1 takes hands off. Student 2 takes control.</p>
           <div className="actions centered">
-            <button className="button secondary" onClick={() => setScreen(1)}>Back</button>
-            <button className="button primary" onClick={() => setScreen(3)}>Start Student 2&apos;s turn</button>
+            <button className="button secondary" onClick={() => setScreen(2)}>Back</button>
+            <button className="button primary" onClick={() => setScreen(4)}>Start Student 2&apos;s turn</button>
           </div>
         </section>
       </main>
     );
   }
 
-  if (screen === 3) {
-    return <Round driver="Student 2" navigator="Student 1" onBack={() => setScreen(2)} onDone={() => setScreen(4)} />;
+  if (screen === 4) {
+    return <Round driver="Student 2" navigator="Student 1" onBack={() => setScreen(3)} onDone={() => setScreen(5)} />;
   }
 
-  if (screen === 4) {
+  if (screen === 5) {
     const prompts = [
       ["1. What are the two jobs?", "The Driver ___. The Navigator ___."],
       ["2. How did you respond to feedback?", "My partner told me ___. I ___."],
@@ -173,8 +229,8 @@ export default function Home() {
             ))}
           </div>
           <div className="actions">
-            <button className="button secondary" onClick={() => setScreen(3)}>Back</button>
-            <button className="button primary" onClick={() => setScreen(5)} disabled={!answered}>
+            <button className="button secondary" onClick={() => setScreen(4)}>Back</button>
+            <button className="button primary" onClick={() => setScreen(6)} disabled={!answered}>
               {answered ? "Finish" : "Answer all 3 questions"}
             </button>
           </div>
@@ -183,7 +239,7 @@ export default function Home() {
     );
   }
 
-  if (screen === 5) {
+  if (screen === 6) {
     return (
       <main className="shell center-screen">
         <section className="panel finish-panel">
@@ -225,7 +281,7 @@ export default function Home() {
           <strong>Only the Driver touches the computer.</strong>
         </div>
 
-        <button className="button primary large" onClick={() => setScreen(1)}>Student 1 starts as Driver</button>
+        <button className="button primary large" onClick={() => setScreen(1)}>See a good example</button>
       </section>
     </main>
   );

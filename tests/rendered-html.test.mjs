@@ -23,7 +23,7 @@ test("server-renders the Driver and Navigator guide", async () => {
   assert.match(html, /<title>Driver and Navigator Guide<\/title>/i);
   assert.match(html, /One computer\. Two helpers\./);
   assert.match(html, /Only the Driver touches the computer\./);
-  assert.match(html, /Student 1 starts as Driver/);
+  assert.match(html, /See a good example/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
 });
 
@@ -36,6 +36,9 @@ test("contains both turns, the switch, and all three reflection prompts", async 
   assert.match(page, /driver="Student 1" navigator="Student 2"/);
   assert.match(page, /driver="Student 2" navigator="Student 1"/);
   assert.match(page, /Switch jobs/);
+  assert.match(page, /Watch how it sounds/);
+  assert.match(page, /Which key does it use\?/);
+  assert.match(page, /It works because I saw the ball move and the score change\./);
   assert.match(page, /What are the two jobs\?/);
   assert.match(page, /How did you respond to feedback\?/);
   assert.match(page, /How did you work together\?/);
