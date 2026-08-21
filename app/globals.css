@@ -148,21 +148,9 @@ h1 { max-width: 800px; margin: 12px auto 10px; font-size: clamp(2.1rem, 6vw, 4.3
 .time-up-card > span { color: #a51d1d; font-size: .84rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
 .time-up-card h2 { margin: 7px 0; font-size: clamp(1.8rem, 5vw, 2.7rem); }
 .time-up-card p { margin: 0 0 20px; color: var(--muted); line-height: 1.5; }
-.questions { display: grid; gap: 16px; margin-top: 28px; }
-.question { display: grid; gap: 12px; padding: 18px; border: 1px solid var(--line); border-radius: 18px; background: #fff; }
-.question label { display: grid; gap: 5px; }
-.question strong { font-size: 1.08rem; }
-.question span { color: var(--muted); }
-.sentence-frame { font-weight: 700; }
-.helper-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.helpful-example, .avoid-example { padding: 13px 14px; border: 2px solid; border-radius: 13px; }
-.helpful-example { border-color: #83c9ae; background: #effaf5; }
-.avoid-example { border-color: #ef9a9a; background: #fff2f2; }
-.helpful-example strong { color: var(--green-dark); font-size: .82rem; }
-.avoid-example strong { color: #a51d1d; font-size: .82rem; letter-spacing: .04em; }
-.helpful-example p, .avoid-example p { margin: 7px 0 0; line-height: 1.45; }
-.avoid-example small { display: block; margin-top: 6px; color: #7e3434; line-height: 1.35; }
-.question textarea { width: 100%; resize: vertical; padding: 12px; border: 2px solid #c9d0dc; border-radius: 11px; color: var(--ink); background: var(--paper); }
+.poster-example { display: grid; justify-items: center; gap: 12px; margin: 28px auto 0; }
+.poster-example img { display: block; width: min(100%, 620px); height: auto; border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 16px 36px rgba(29, 33, 84, .16); }
+.poster-example figcaption { max-width: 620px; color: var(--muted); font-weight: 700; line-height: 1.45; text-align: center; }
 .poster-actions { align-items: center; }
 .finish-hint { max-width: 440px; color: var(--muted); font-size: .88rem; line-height: 1.4; }
 .finish-mark { display: grid; width: 82px; height: 82px; margin: 0 auto 18px; place-items: center; border-radius: 50%; background: var(--green); color: #fff; font-size: 2.5rem; font-weight: 900; }
@@ -172,7 +160,7 @@ h1 { max-width: 800px; margin: 12px auto 10px; font-size: clamp(2.1rem, 6vw, 4.3
 @media (max-width: 650px) {
   .shell { width: min(100% - 16px, 1120px); padding: 8px 0 18px; }
   .panel { padding: 22px 16px; border-radius: 22px; }
-  .role-grid, .plain-rules, .name-form, .schedule-grid, .helper-grid { grid-template-columns: 1fr; }
+  .role-grid, .plain-rules, .name-form, .schedule-grid { grid-template-columns: 1fr; }
   .topbar-status { gap: 5px; }
   .time-chip { padding-inline: 9px; }
   .timer-chip { min-width: 70px; padding-inline: 10px; }

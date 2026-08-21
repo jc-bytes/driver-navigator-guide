@@ -190,35 +190,9 @@ function Round({ driver, navigator, onBack, onDone, timeUpAction }: RoundProps) 
   );
 }
 
-const posterPrompts = [
-  {
-    question: "1. What are the two jobs?",
-    frame: "The Driver ___. The Navigator ___.",
-    helpful: "The Driver controls the computer and explains. The Navigator watches, asks questions, and checks.",
-    avoid: "The Driver drives. The Navigator navigates.",
-    reason: "This does not explain the jobs.",
-  },
-  {
-    question: "2. How did you respond to feedback?",
-    frame: "My partner told me ___. I ___.",
-    helpful: "My partner told me to check the D key. I checked it and tested the game again.",
-    avoid: "I said okay.",
-    reason: "This does not say what the feedback was or what you did.",
-  },
-  {
-    question: "3. How did you work together?",
-    frame: "We worked together by ___.",
-    helpful: "We took turns, listened to each other, and tested the sprite together.",
-    avoid: "We worked together.",
-    reason: "This does not explain how you worked together.",
-  },
-];
-
 function Poster({ onDone }: { onDone: () => void }) {
-  const [answers, setAnswers] = useState(["", "", ""]);
   const secondsLeft = useCountdown(5 * 60);
   const timeUp = secondsLeft === 0;
-  const answered = answers.every((answer) => answer.trim().length > 2);
 
   return (
     <main className="shell">
@@ -230,50 +204,29 @@ function Poster({ onDone }: { onDone: () => void }) {
       </header>
       <section className="panel reflection-panel">
         <h1>Make your teamwork poster</h1>
-        <p className="lead">You have 5 minutes. Use these answers on your poster.</p>
+        <p className="lead">You have 5 minutes. Make your poster on paper. Use this example to help you.</p>
 
         {timeUp ? (
           <div className="time-up-card" role="alert">
             <span>Time is up</span>
-            <h2>Put your pencil or keyboard down.</h2>
+            <h2>Put your pencil down.</h2>
             <p>Show your poster to your teacher.</p>
             <button className="button primary large" onClick={onDone}>Finish</button>
           </div>
         ) : (
           <>
-            <div className="questions">
-              {posterPrompts.map((prompt, index) => (
-                <article className="question" key={prompt.question}>
-                  <label htmlFor={`poster-answer-${index}`}>
-                    <strong>{prompt.question}</strong>
-                    <span className="sentence-frame">Start like this: {prompt.frame}</span>
-                  </label>
-                  <div className="helper-grid">
-                    <div className="helpful-example">
-                      <strong>Helpful example. Change the details.</strong>
-                      <p>{prompt.helpful}</p>
-                    </div>
-                    <div className="avoid-example">
-                      <strong>DO NOT USE THIS</strong>
-                      <p>{prompt.avoid}</p>
-                      <small>{prompt.reason}</small>
-                    </div>
-                  </div>
-                  <textarea
-                    id={`poster-answer-${index}`}
-                    value={answers[index]}
-                    onChange={(event) => setAnswers((current) => current.map((answer, i) => i === index ? event.target.value : answer))}
-                    rows={2}
-                    placeholder="Write your own answer"
-                  />
-                </article>
-              ))}
-            </div>
+            <figure className="poster-example">
+              {/* This is a static GitHub Pages export, so a plain image keeps the asset portable. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="./driver-navigator-poster-example.png"
+                alt="Example Driver and Navigator poster with answers about the two jobs, responding to feedback, and working with a partner"
+              />
+              <figcaption>Use the three questions. Change the answers to match what you and your partner did.</figcaption>
+            </figure>
             <div className="actions poster-actions">
-              <span className="finish-hint">Finish early only after answering all 3 questions.</span>
-              <button className="button primary" onClick={onDone} disabled={!answered}>
-                {answered ? "Finish poster" : "Answer all 3 questions"}
-              </button>
+              <span className="finish-hint">Choose the button after your paper poster is finished.</span>
+              <button className="button primary" onClick={onDone}>We finished our poster</button>
             </div>
           </>
         )}

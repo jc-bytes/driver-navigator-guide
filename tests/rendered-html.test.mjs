@@ -27,7 +27,7 @@ test("server-renders the Driver and Navigator guide", async () => {
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
 });
 
-test("contains both turns, the switch, and all three reflection prompts", async () => {
+test("contains both turns, the switch, and the paper poster example", async () => {
   const [page, packageJson] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
@@ -55,9 +55,6 @@ test("contains both turns, the switch, and all three reflection prompts", async 
   assert.match(page, /Read or do this step\. Then choose Next\./);
   assert.match(page, /Read this line aloud\. Then choose Next\./);
   assert.match(page, /It works because I saw the sprite move and the score change\./);
-  assert.match(page, /What are the two jobs\?/);
-  assert.match(page, /How did you respond to feedback\?/);
-  assert.match(page, /How did you work together\?/);
   assert.match(page, /disabled=\{conversationStep === 5 && !allDone\}/);
   assert.match(page, /useCountdown\(4 \* 60\)/);
   assert.match(page, /useCountdown\(5 \* 60\)/);
@@ -65,10 +62,12 @@ test("contains both turns, the switch, and all three reflection prompts", async 
   assert.match(page, /timeUpAction="Switch roles"/);
   assert.match(page, /timeUpAction="Go to poster"/);
   assert.match(page, /Make your teamwork poster/);
-  assert.match(page, /Helpful example\. Change the details\./);
-  assert.match(page, /DO NOT USE THIS/);
-  assert.match(page, /The Driver drives\. The Navigator navigates\./);
-  assert.match(page, /Finish early only after answering all 3 questions\./);
+  assert.match(page, /driver-navigator-poster-example\.png/);
+  assert.match(page, /answers about the two jobs, responding to feedback, and working with a partner/);
+  assert.match(page, /Use the three questions\. Change the answers to match what you and your partner did\./);
+  assert.match(page, /We finished our poster/);
+  assert.doesNotMatch(page, /<textarea/);
+  assert.doesNotMatch(page, /Write your own answer/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
 
   await assert.rejects(access(new URL("../app/_sites-preview", import.meta.url)));
