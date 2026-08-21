@@ -204,13 +204,13 @@ function Poster({ onDone }: { onDone: () => void }) {
       </header>
       <section className="panel reflection-panel">
         <h1>Make your teamwork poster</h1>
-        <p className="lead">You have 5 minutes. Make your poster on paper. Use this example to help you.</p>
+        <p className="lead">You have 5 minutes. Make your poster in Canva. Use this example to help you.</p>
 
         {timeUp ? (
           <div className="time-up-card" role="alert">
             <span>Time is up</span>
-            <h2>Put your pencil down.</h2>
-            <p>Show your poster to your teacher.</p>
+            <h2>Stop editing.</h2>
+            <p>Show your Canva poster to your teacher.</p>
             <button className="button primary large" onClick={onDone}>Finish</button>
           </div>
         ) : (
@@ -225,8 +225,8 @@ function Poster({ onDone }: { onDone: () => void }) {
               <figcaption>Use the three questions. Change the answers to match what you and your partner did.</figcaption>
             </figure>
             <div className="actions poster-actions">
-              <span className="finish-hint">Choose the button after your paper poster is finished.</span>
-              <button className="button primary" onClick={onDone}>We finished our poster</button>
+              <span className="finish-hint">Choose the button after your Canva poster is finished.</span>
+              <button className="button primary" onClick={onDone}>We finished our Canva poster</button>
             </div>
           </>
         )}

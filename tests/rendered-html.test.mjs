@@ -27,7 +27,7 @@ test("server-renders the Driver and Navigator guide", async () => {
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
 });
 
-test("contains both turns, the switch, and the paper poster example", async () => {
+test("contains both turns, the switch, and the Canva poster example", async () => {
   const [page, packageJson] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
@@ -65,7 +65,10 @@ test("contains both turns, the switch, and the paper poster example", async () =
   assert.match(page, /driver-navigator-poster-example\.png/);
   assert.match(page, /answers about the two jobs, responding to feedback, and working with a partner/);
   assert.match(page, /Use the three questions\. Change the answers to match what you and your partner did\./);
-  assert.match(page, /We finished our poster/);
+  assert.match(page, /Make your poster in Canva/);
+  assert.match(page, /We finished our Canva poster/);
+  assert.doesNotMatch(page, /poster on paper/);
+  assert.doesNotMatch(page, /pencil/);
   assert.doesNotMatch(page, /<textarea/);
   assert.doesNotMatch(page, /Write your own answer/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
