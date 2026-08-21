@@ -3,8 +3,8 @@
 import { useMemo, useState } from "react";
 
 type RoundProps = {
-  driver: "Student 1" | "Student 2";
-  navigator: "Student 1" | "Student 2";
+  driver: string;
+  navigator: string;
   onBack: () => void;
   onDone: () => void;
 };
@@ -114,7 +114,10 @@ function Round({ driver, navigator, onBack, onDone }: RoundProps) {
 
 export default function Home() {
   const [screen, setScreen] = useState(0);
+  const [student1, setStudent1] = useState("");
+  const [student2, setStudent2] = useState("");
   const [answers, setAnswers] = useState(["", "", ""]);
+  const namesReady = student1.trim().length > 0 && student2.trim().length > 0;
   const answered = useMemo(() => answers.every((answer) => answer.trim().length > 2), [answers]);
 
   if (screen === 1) {
@@ -126,7 +129,7 @@ export default function Home() {
         </header>
         <section className="panel example-panel">
           <h1>Watch how it sounds</h1>
-          <p className="lead">Student 1 is the Driver. Student 2 is the Navigator.</p>
+          <p className="lead"><strong>{student1}</strong> is the Driver. <strong>{student2}</strong> is the Navigator.</p>
 
           <div className="conversation" aria-label="Example conversation between a Driver and Navigator">
             <div className="speech driver-speech">
@@ -174,7 +177,7 @@ export default function Home() {
   }
 
   if (screen === 2) {
-    return <Round driver="Student 1" navigator="Student 2" onBack={() => setScreen(1)} onDone={() => setScreen(3)} />;
+    return <Round driver={student1} navigator={student2} onBack={() => setScreen(1)} onDone={() => setScreen(3)} />;
   }
 
   if (screen === 3) {
@@ -183,15 +186,15 @@ export default function Home() {
         <section className="panel switch-panel">
           <span className="eyebrow">Stop</span>
           <h1>Switch jobs</h1>
-          <div className="switch-visual" aria-label="Student 1 becomes Navigator. Student 2 becomes Driver.">
-            <RoleBadge role="Navigator" student="Student 1" />
+          <div className="switch-visual" aria-label={`${student1} becomes Navigator. ${student2} becomes Driver.`}>
+            <RoleBadge role="Navigator" student={student1} />
             <span className="switch-arrow" aria-hidden="true">→</span>
-            <RoleBadge role="Driver" student="Student 2" />
+            <RoleBadge role="Driver" student={student2} />
           </div>
-          <p className="lead">Student 1 takes hands off. Student 2 takes control.</p>
+          <p className="lead"><strong>{student1}</strong> takes hands off. <strong>{student2}</strong> takes control.</p>
           <div className="actions centered">
             <button className="button secondary" onClick={() => setScreen(2)}>Back</button>
-            <button className="button primary" onClick={() => setScreen(4)}>Start Student 2&apos;s turn</button>
+            <button className="button primary" onClick={() => setScreen(4)}>Start {student2}&apos;s turn</button>
           </div>
         </section>
       </main>
@@ -199,7 +202,7 @@ export default function Home() {
   }
 
   if (screen === 4) {
-    return <Round driver="Student 2" navigator="Student 1" onBack={() => setScreen(3)} onDone={() => setScreen(5)} />;
+    return <Round driver={student2} navigator={student1} onBack={() => setScreen(3)} onDone={() => setScreen(5)} />;
   }
 
   if (screen === 5) {
@@ -255,7 +258,7 @@ export default function Home() {
             <p><strong>Driver:</strong> hands, show, explain</p>
             <p><strong>Navigator:</strong> eyes, listen, check</p>
           </div>
-          <button className="button secondary" onClick={() => { setAnswers(["", "", ""]); setScreen(0); }}>
+          <button className="button secondary" onClick={() => { setStudent1(""); setStudent2(""); setAnswers(["", "", ""]); setScreen(0); }}>
             Start again
           </button>
         </section>
@@ -269,6 +272,33 @@ export default function Home() {
         <span className="eyebrow">Pair programming</span>
         <h1>One computer. Two helpers.</h1>
         <p className="lead eli5">Think about building with blocks. One person holds the blocks. The other person looks and helps.</p>
+
+        <div className="name-section">
+          <h2>Who is working together?</h2>
+          <div className="name-form">
+            <label className="name-field">
+              <span>Student 1 name</span>
+              <input
+                value={student1}
+                onChange={(event) => setStudent1(event.target.value)}
+                maxLength={30}
+                autoComplete="off"
+                placeholder="Type a first name"
+              />
+            </label>
+            <label className="name-field">
+              <span>Student 2 name</span>
+              <input
+                value={student2}
+                onChange={(event) => setStudent2(event.target.value)}
+                maxLength={30}
+                autoComplete="off"
+                placeholder="Type a first name"
+              />
+            </label>
+          </div>
+          <p className="privacy-note">Your names stay on this page. They are not saved.</p>
+        </div>
 
         <div className="role-grid intro-roles">
           <RoleBadge role="Driver" student="Hands" />
@@ -285,7 +315,9 @@ export default function Home() {
           <strong>Only the Driver touches the computer.</strong>
         </div>
 
-        <button className="button primary large" onClick={() => setScreen(1)}>See a good example</button>
+        <button className="button primary large" onClick={() => setScreen(1)} disabled={!namesReady}>
+          {namesReady ? "See a good example" : "Enter both names to begin"}
+        </button>
       </section>
     </main>
   );

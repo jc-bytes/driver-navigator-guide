@@ -23,7 +23,7 @@ test("server-renders the Driver and Navigator guide", async () => {
   assert.match(html, /<title>Driver and Navigator Guide<\/title>/i);
   assert.match(html, /One computer\. Two helpers\./);
   assert.match(html, /Only the Driver touches the computer\./);
-  assert.match(html, /See a good example/);
+  assert.match(html, /Enter both names to begin/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
 });
 
@@ -33,8 +33,11 @@ test("contains both turns, the switch, and all three reflection prompts", async 
     readFile(new URL("../package.json", import.meta.url), "utf8"),
   ]);
 
-  assert.match(page, /driver="Student 1" navigator="Student 2"/);
-  assert.match(page, /driver="Student 2" navigator="Student 1"/);
+  assert.match(page, /driver=\{student1\} navigator=\{student2\}/);
+  assert.match(page, /driver=\{student2\} navigator=\{student1\}/);
+  assert.match(page, /Student 1 name/);
+  assert.match(page, /Student 2 name/);
+  assert.match(page, /Your names stay on this page\. They are not saved\./);
   assert.match(page, /Switch jobs/);
   assert.match(page, /Watch how it sounds/);
   assert.match(page, /Which key does it use\?/);
