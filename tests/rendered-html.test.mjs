@@ -57,6 +57,16 @@ test("contains both turns, the switch, and all three reflection prompts", async 
   assert.match(page, /How did you respond to feedback\?/);
   assert.match(page, /How did you work together\?/);
   assert.match(page, /disabled=\{conversationStep === 5 && !allDone\}/);
+  assert.match(page, /useCountdown\(4 \* 60\)/);
+  assert.match(page, /useCountdown\(5 \* 60\)/);
+  assert.match(page, /Time is up/);
+  assert.match(page, /timeUpAction="Switch roles"/);
+  assert.match(page, /timeUpAction="Go to poster"/);
+  assert.match(page, /Make your teamwork poster/);
+  assert.match(page, /Helpful example\. Change the details\./);
+  assert.match(page, /DO NOT USE THIS/);
+  assert.match(page, /The Driver drives\. The Navigator navigates\./);
+  assert.match(page, /Finish early only after answering all 3 questions\./);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
 
   await assert.rejects(access(new URL("../app/_sites-preview", import.meta.url)));

@@ -1,13 +1,37 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 type RoundProps = {
   driver: string;
   navigator: string;
   onBack: () => void;
   onDone: () => void;
+  timeUpAction: string;
 };
+
+function useCountdown(totalSeconds: number) {
+  const [deadline] = useState(() => Date.now() + totalSeconds * 1000);
+  const [secondsLeft, setSecondsLeft] = useState(totalSeconds);
+
+  useEffect(() => {
+    function update() {
+      setSecondsLeft(Math.max(0, Math.ceil((deadline - Date.now()) / 1000)));
+    }
+
+    update();
+    const timer = window.setInterval(update, 250);
+    return () => window.clearInterval(timer);
+  }, [deadline]);
+
+  return secondsLeft;
+}
+
+function formatTime(totalSeconds: number) {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+}
 
 const checks = [
   "The Driver showed one sprite.",
@@ -28,11 +52,13 @@ function RoleBadge({ role, student }: { role: "Driver" | "Navigator"; student: s
   );
 }
 
-function Round({ driver, navigator, onBack, onDone }: RoundProps) {
+function Round({ driver, navigator, onBack, onDone, timeUpAction }: RoundProps) {
   const [done, setDone] = useState<boolean[]>(checks.map(() => false));
   const [conversationStep, setConversationStep] = useState(0);
+  const secondsLeft = useCountdown(4 * 60);
   const allDone = done.every(Boolean);
   const lastStep = conversationStep === 7;
+  const timeUp = secondsLeft === 0;
 
   function toggle(index: number) {
     setDone((current) => current.map((item, i) => (i === index ? !item : item)));
@@ -116,33 +142,141 @@ function Round({ driver, navigator, onBack, onDone }: RoundProps) {
     <main className="shell">
       <header className="topbar">
         <span className="eyebrow">Your turn</span>
-        <span className="time-chip">Step {conversationStep + 1} of 8</span>
+        <div className="topbar-status">
+          <span className="time-chip">Step {conversationStep + 1} of 8</span>
+          <span className={`timer-chip ${secondsLeft <= 30 ? "urgent" : ""}`} aria-label={`${secondsLeft} seconds remaining`}>
+            {formatTime(secondsLeft)}
+          </span>
+        </div>
       </header>
 
       <section className="panel">
         <h1>Show one small part</h1>
         <p className="lead">You are not checking the whole game. One sprite is enough.</p>
 
-        <div className="role-grid">
-          <RoleBadge role="Driver" student={driver} />
-          <RoleBadge role="Navigator" student={navigator} />
-        </div>
+        {timeUp ? (
+          <div className="time-up-card" role="alert">
+            <span>Time is up</span>
+            <h2>Stop this turn.</h2>
+            <p>Finish the sentence you are saying. Then continue.</p>
+            <button className="button primary large" onClick={onDone}>{timeUpAction}</button>
+          </div>
+        ) : (
+          <>
+            <div className="role-grid">
+              <RoleBadge role="Driver" student={driver} />
+              <RoleBadge role="Navigator" student={navigator} />
+            </div>
 
-        <div className="conversation-stepper" aria-live="polite">
-          <p className="step-instruction">Read or do this step. Then choose Next.</p>
-          {currentStep}
-        </div>
+            <div className="conversation-stepper" aria-live="polite">
+              <p className="step-instruction">Read or do this step. Then choose Next.</p>
+              {currentStep}
+            </div>
 
-        <div className="actions">
-          <button className="button secondary" onClick={() => conversationStep > 0 ? setConversationStep((step) => step - 1) : onBack()}>Back</button>
-          <button
-            className="button primary"
-            onClick={() => lastStep ? onDone() : setConversationStep((step) => step + 1)}
-            disabled={conversationStep === 5 && !allDone}
-          >
-            {conversationStep === 5 && !allDone ? "Complete the 4 checks" : lastStep ? "We finished this turn" : "Next"}
-          </button>
-        </div>
+            <div className="actions">
+              <button className="button secondary" onClick={() => conversationStep > 0 ? setConversationStep((step) => step - 1) : onBack()}>Back</button>
+              <button
+                className="button primary"
+                onClick={() => lastStep ? onDone() : setConversationStep((step) => step + 1)}
+                disabled={conversationStep === 5 && !allDone}
+              >
+                {conversationStep === 5 && !allDone ? "Complete the 4 checks" : lastStep ? "We finished this turn" : "Next"}
+              </button>
+            </div>
+          </>
+        )}
+      </section>
+    </main>
+  );
+}
+
+const posterPrompts = [
+  {
+    question: "1. What are the two jobs?",
+    frame: "The Driver ___. The Navigator ___.",
+    helpful: "The Driver controls the computer and explains. The Navigator watches, asks questions, and checks.",
+    avoid: "The Driver drives. The Navigator navigates.",
+    reason: "This does not explain the jobs.",
+  },
+  {
+    question: "2. How did you respond to feedback?",
+    frame: "My partner told me ___. I ___.",
+    helpful: "My partner told me to check the D key. I checked it and tested the game again.",
+    avoid: "I said okay.",
+    reason: "This does not say what the feedback was or what you did.",
+  },
+  {
+    question: "3. How did you work together?",
+    frame: "We worked together by ___.",
+    helpful: "We took turns, listened to each other, and tested the sprite together.",
+    avoid: "We worked together.",
+    reason: "This does not explain how you worked together.",
+  },
+];
+
+function Poster({ onDone }: { onDone: () => void }) {
+  const [answers, setAnswers] = useState(["", "", ""]);
+  const secondsLeft = useCountdown(5 * 60);
+  const timeUp = secondsLeft === 0;
+  const answered = answers.every((answer) => answer.trim().length > 2);
+
+  return (
+    <main className="shell">
+      <header className="topbar">
+        <span className="eyebrow">Poster time</span>
+        <span className={`timer-chip ${secondsLeft <= 30 ? "urgent" : ""}`} aria-label={`${secondsLeft} seconds remaining`}>
+          {formatTime(secondsLeft)}
+        </span>
+      </header>
+      <section className="panel reflection-panel">
+        <h1>Make your teamwork poster</h1>
+        <p className="lead">You have 5 minutes. Use these answers on your poster.</p>
+
+        {timeUp ? (
+          <div className="time-up-card" role="alert">
+            <span>Time is up</span>
+            <h2>Put your pencil or keyboard down.</h2>
+            <p>Show your poster to your teacher.</p>
+            <button className="button primary large" onClick={onDone}>Finish</button>
+          </div>
+        ) : (
+          <>
+            <div className="questions">
+              {posterPrompts.map((prompt, index) => (
+                <article className="question" key={prompt.question}>
+                  <label htmlFor={`poster-answer-${index}`}>
+                    <strong>{prompt.question}</strong>
+                    <span className="sentence-frame">Start like this: {prompt.frame}</span>
+                  </label>
+                  <div className="helper-grid">
+                    <div className="helpful-example">
+                      <strong>Helpful example. Change the details.</strong>
+                      <p>{prompt.helpful}</p>
+                    </div>
+                    <div className="avoid-example">
+                      <strong>DO NOT USE THIS</strong>
+                      <p>{prompt.avoid}</p>
+                      <small>{prompt.reason}</small>
+                    </div>
+                  </div>
+                  <textarea
+                    id={`poster-answer-${index}`}
+                    value={answers[index]}
+                    onChange={(event) => setAnswers((current) => current.map((answer, i) => i === index ? event.target.value : answer))}
+                    rows={2}
+                    placeholder="Write your own answer"
+                  />
+                </article>
+              ))}
+            </div>
+            <div className="actions poster-actions">
+              <span className="finish-hint">Finish early only after answering all 3 questions.</span>
+              <button className="button primary" onClick={onDone} disabled={!answered}>
+                {answered ? "Finish poster" : "Answer all 3 questions"}
+              </button>
+            </div>
+          </>
+        )}
       </section>
     </main>
   );
@@ -153,9 +287,7 @@ export default function Home() {
   const [exampleStep, setExampleStep] = useState(0);
   const [student1, setStudent1] = useState("");
   const [student2, setStudent2] = useState("");
-  const [answers, setAnswers] = useState(["", "", ""]);
   const namesReady = student1.trim().length > 0 && student2.trim().length > 0;
-  const answered = useMemo(() => answers.every((answer) => answer.trim().length > 2), [answers]);
 
   if (screen === 1) {
     const exampleLines = [
@@ -207,7 +339,7 @@ export default function Home() {
   }
 
   if (screen === 2) {
-    return <Round driver={student1} navigator={student2} onBack={() => setScreen(1)} onDone={() => setScreen(3)} />;
+    return <Round driver={student1} navigator={student2} onBack={() => setScreen(1)} onDone={() => setScreen(3)} timeUpAction="Switch roles" />;
   }
 
   if (screen === 3) {
@@ -232,48 +364,11 @@ export default function Home() {
   }
 
   if (screen === 4) {
-    return <Round driver={student2} navigator={student1} onBack={() => setScreen(3)} onDone={() => setScreen(5)} />;
+    return <Round driver={student2} navigator={student1} onBack={() => setScreen(3)} onDone={() => setScreen(5)} timeUpAction="Go to poster" />;
   }
 
   if (screen === 5) {
-    const prompts = [
-      ["1. What are the two jobs?", "The Driver ___. The Navigator ___."],
-      ["2. How did you respond to feedback?", "My partner told me ___. I ___."],
-      ["3. How did you work together?", "We worked together by ___."],
-    ];
-
-    return (
-      <main className="shell">
-        <header className="topbar">
-          <span className="eyebrow">Last step</span>
-          <span className="time-chip">Answer together</span>
-        </header>
-        <section className="panel reflection-panel">
-          <h1>Think about your teamwork</h1>
-          <p className="lead">Talk first. Then type one short answer for each question.</p>
-          <div className="questions">
-            {prompts.map(([question, frame], index) => (
-              <label className="question" key={question}>
-                <strong>{question}</strong>
-                <span>{frame}</span>
-                <textarea
-                  value={answers[index]}
-                  onChange={(event) => setAnswers((current) => current.map((answer, i) => i === index ? event.target.value : answer))}
-                  rows={2}
-                  placeholder="Type your answer here"
-                />
-              </label>
-            ))}
-          </div>
-          <div className="actions">
-            <button className="button secondary" onClick={() => setScreen(4)}>Back</button>
-            <button className="button primary" onClick={() => setScreen(6)} disabled={!answered}>
-              {answered ? "Finish" : "Answer all 3 questions"}
-            </button>
-          </div>
-        </section>
-      </main>
-    );
+    return <Poster onDone={() => setScreen(6)} />;
   }
 
   if (screen === 6) {
@@ -288,7 +383,7 @@ export default function Home() {
             <p><strong>Driver:</strong> hands, show, explain</p>
             <p><strong>Navigator:</strong> eyes, listen, check</p>
           </div>
-          <button className="button secondary" onClick={() => { setStudent1(""); setStudent2(""); setAnswers(["", "", ""]); setScreen(0); }}>
+          <button className="button secondary" onClick={() => { setStudent1(""); setStudent2(""); setExampleStep(0); setScreen(0); }}>
             Start again
           </button>
         </section>
@@ -334,6 +429,16 @@ export default function Home() {
           <RoleBadge role="Driver" student="Hands" />
           <RoleBadge role="Navigator" student="Eyes" />
         </div>
+
+        <section className="schedule" aria-labelledby="schedule-title">
+          <h2 id="schedule-title">Today&apos;s plan</h2>
+          <div className="schedule-grid">
+            <div><strong>4:00</strong><span>{student1.trim() || "Student 1"} drives</span></div>
+            <div><strong>Switch</strong><span>Change jobs</span></div>
+            <div><strong>4:00</strong><span>{student2.trim() || "Student 2"} drives</span></div>
+            <div><strong>5:00</strong><span>Make the poster</span></div>
+          </div>
+        </section>
 
         <div className="plain-rules">
           <p><strong>The Driver</strong> touches the computer, shows one sprite, and explains it.</p>
