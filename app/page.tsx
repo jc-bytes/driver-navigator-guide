@@ -64,7 +64,7 @@ function Round({ driver, navigator, onBack, onDone }: RoundProps) {
               </ol>
               <div className="say-box">
                 <span>Say this</span>
-                <p>&quot;This is Sprite __. It uses the __ key. When the game starts, it __.&quot;</p>
+                <p>&quot;I am showing Sprite __. It uses the __ key. When I click the green flag, the sprite starts at the top and moves down.&quot;</p>
               </div>
             </div>
           </article>
