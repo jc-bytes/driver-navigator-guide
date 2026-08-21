@@ -40,13 +40,13 @@ const checks = [
   "We ran the game and watched what happened.",
 ];
 
-function RoleBadge({ role, student }: { role: "Driver" | "Navigator"; student: string }) {
+function RoleBadge({ job, student }: { job: "Driver" | "Navigator"; student: string }) {
   return (
-    <div className={`role-card ${role.toLowerCase()}`}>
-      <span className="role-letter" aria-hidden="true">{role[0]}</span>
+    <div className={`role-card ${job.toLowerCase()}`}>
+      <span className="role-letter" aria-hidden="true">{job[0]}</span>
       <div>
         <p>{student}</p>
-        <strong>{role}</strong>
+        <strong>{job}</strong>
       </div>
     </div>
   );
@@ -164,8 +164,8 @@ function Round({ driver, navigator, onBack, onDone, timeUpAction }: RoundProps) 
         ) : (
           <>
             <div className="role-grid">
-              <RoleBadge role="Driver" student={driver} />
-              <RoleBadge role="Navigator" student={navigator} />
+              <RoleBadge job="Driver" student={driver} />
+              <RoleBadge job="Navigator" student={navigator} />
             </div>
 
             <div className="conversation-stepper" aria-live="polite">
@@ -349,9 +349,9 @@ export default function Home() {
           <span className="eyebrow">Stop</span>
           <h1>Switch jobs</h1>
           <div className="switch-visual" aria-label={`${student1} becomes Navigator. ${student2} becomes Driver.`}>
-            <RoleBadge role="Navigator" student={student1} />
+            <RoleBadge job="Navigator" student={student1} />
             <span className="switch-arrow" aria-hidden="true">→</span>
-            <RoleBadge role="Driver" student={student2} />
+            <RoleBadge job="Driver" student={student2} />
           </div>
           <p className="lead"><strong>{student1}</strong> takes hands off. <strong>{student2}</strong> takes control.</p>
           <div className="actions centered">
@@ -426,8 +426,8 @@ export default function Home() {
         </div>
 
         <div className="role-grid intro-roles">
-          <RoleBadge role="Driver" student="Hands" />
-          <RoleBadge role="Navigator" student="Eyes" />
+          <RoleBadge job="Driver" student="Hands" />
+          <RoleBadge job="Navigator" student="Eyes" />
         </div>
 
         <section className="schedule" aria-labelledby="schedule-title">

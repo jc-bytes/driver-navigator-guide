@@ -11,6 +11,12 @@ npm run dev
 
 Open the local address shown in the terminal.
 
+## Public site
+
+GitHub Pages publishes the guide at:
+
+https://jc-bytes.github.io/driver-navigator-guide/
+
 ## Hosting rule
 
 Keep this project local or publish it through GitHub. Do not connect it to ChatGPT Sites hosting.

@@ -35,6 +35,8 @@ test("contains both turns, the switch, and all three reflection prompts", async 
 
   assert.match(page, /driver=\{student1\} navigator=\{student2\}/);
   assert.match(page, /driver=\{student2\} navigator=\{student1\}/);
+  assert.match(page, /<RoleBadge job="Driver"/);
+  assert.match(page, /<RoleBadge job="Navigator"/);
   assert.match(page, /Student 1 name/);
   assert.match(page, /Student 2 name/);
   assert.match(page, /Your names stay on this page\. They are not saved\./);
