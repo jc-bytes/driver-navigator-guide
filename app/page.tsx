@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 
 type RoundProps = {
   driver: string;
@@ -30,17 +30,93 @@ function RoleBadge({ role, student }: { role: "Driver" | "Navigator"; student: s
 
 function Round({ driver, navigator, onBack, onDone }: RoundProps) {
   const [done, setDone] = useState<boolean[]>(checks.map(() => false));
+  const [conversationStep, setConversationStep] = useState(0);
   const allDone = done.every(Boolean);
+  const lastStep = conversationStep === 7;
 
   function toggle(index: number) {
     setDone((current) => current.map((item, i) => (i === index ? !item : item)));
+  }
+
+  let currentStep: ReactNode;
+
+  if (conversationStep === 0) {
+    currentStep = (
+      <div className="speech driver-speech">
+        <span>Driver ({driver}) says</span>
+        <p>&quot;I am showing Sprite __.&quot;</p>
+      </div>
+    );
+  } else if (conversationStep === 1) {
+    currentStep = (
+      <div className="speech navigator-speech">
+        <span>Navigator ({navigator}) says</span>
+        <p>&quot;Okay. Which key does it use?&quot;</p>
+      </div>
+    );
+  } else if (conversationStep === 2) {
+    currentStep = (
+      <div className="speech driver-speech">
+        <span>Driver ({driver}) says</span>
+        <p>&quot;It uses the __ key. When I click the green flag, the sprite starts at the top and moves down.&quot;</p>
+      </div>
+    );
+  } else if (conversationStep === 3) {
+    currentStep = (
+      <div className="speech navigator-speech">
+        <span>Navigator ({navigator}) says</span>
+        <p>&quot;Let&apos;s test it.&quot;</p>
+      </div>
+    );
+  } else if (conversationStep === 4) {
+    currentStep = (
+      <div className="action-card">
+        <span>Driver ({driver}) does</span>
+        <p>Click the green flag. Press the key when the sprite reaches the goal.</p>
+      </div>
+    );
+  } else if (conversationStep === 5) {
+    currentStep = (
+      <div className="check-card">
+        <h2>Navigator ({navigator}) checks</h2>
+        <p>Keep your hands off the computer. Say &quot;yes&quot; or &quot;not yet.&quot; The Driver clicks the boxes.</p>
+        <div className="checklist">
+          {checks.map((label, index) => (
+            <button
+              className={done[index] ? "check checked" : "check"}
+              key={label}
+              onClick={() => toggle(index)}
+              aria-pressed={done[index]}
+            >
+              <span aria-hidden="true">{done[index] ? "✓" : index + 1}</span>
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  } else if (conversationStep === 6) {
+    currentStep = (
+      <div className="speech navigator-speech">
+        <span>Navigator ({navigator}) says</span>
+        <p>&quot;It works because I saw __.&quot;</p>
+        <p className="speech-choice">or &quot;Please check __.&quot;</p>
+      </div>
+    );
+  } else {
+    currentStep = (
+      <div className="speech driver-speech">
+        <span>Driver ({driver}) says</span>
+        <p>&quot;Thank you for checking. I am ready to switch.&quot;</p>
+      </div>
+    );
   }
 
   return (
     <main className="shell">
       <header className="topbar">
         <span className="eyebrow">Your turn</span>
-        <span className="time-chip">About 3 minutes</span>
+        <span className="time-chip">Step {conversationStep + 1} of 8</span>
       </header>
 
       <section className="panel">
@@ -52,59 +128,19 @@ function Round({ driver, navigator, onBack, onDone }: RoundProps) {
           <RoleBadge role="Navigator" student={navigator} />
         </div>
 
-        <div className="conversation practice-conversation">
-          <div className="speech driver-speech">
-            <span>Driver ({driver}) says</span>
-            <p>&quot;I am showing Sprite __.&quot;</p>
-          </div>
-          <div className="speech navigator-speech">
-            <span>Navigator ({navigator}) says</span>
-            <p>&quot;Okay. Which key does it use?&quot;</p>
-          </div>
-          <div className="speech driver-speech">
-            <span>Driver ({driver}) says</span>
-            <p>&quot;It uses the __ key. When I click the green flag, the sprite starts at the top and moves down.&quot;</p>
-          </div>
-          <div className="speech navigator-speech">
-            <span>Navigator ({navigator}) says</span>
-            <p>&quot;Let&apos;s test it.&quot;</p>
-          </div>
-          <div className="action-card">
-            <span>Driver ({driver}) does</span>
-            <p>Click the green flag. Press the key when the sprite reaches the goal.</p>
-          </div>
-          <div className="check-card">
-            <h2>Navigator ({navigator}) checks</h2>
-            <p>Keep your hands off the computer. Say &quot;yes&quot; or &quot;not yet.&quot; The Driver clicks the boxes.</p>
-            <div className="checklist">
-              {checks.map((label, index) => (
-                <button
-                  className={done[index] ? "check checked" : "check"}
-                  key={label}
-                  onClick={() => toggle(index)}
-                  aria-pressed={done[index]}
-                >
-                  <span aria-hidden="true">{done[index] ? "✓" : index + 1}</span>
-                  {label}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="speech navigator-speech">
-            <span>Navigator ({navigator}) says</span>
-            <p>&quot;It works because I saw __.&quot;</p>
-            <p className="speech-choice">or &quot;Please check __.&quot;</p>
-          </div>
-          <div className="speech driver-speech">
-            <span>Driver ({driver}) says</span>
-            <p>&quot;Thank you for checking. I am ready to switch.&quot;</p>
-          </div>
+        <div className="conversation-stepper" aria-live="polite">
+          <p className="step-instruction">Read or do this step. Then choose Next.</p>
+          {currentStep}
         </div>
 
         <div className="actions">
-          <button className="button secondary" onClick={onBack}>Back</button>
-          <button className="button primary" onClick={onDone} disabled={!allDone}>
-            {allDone ? "We finished this turn" : "Complete the 4 checks"}
+          <button className="button secondary" onClick={() => conversationStep > 0 ? setConversationStep((step) => step - 1) : onBack()}>Back</button>
+          <button
+            className="button primary"
+            onClick={() => lastStep ? onDone() : setConversationStep((step) => step + 1)}
+            disabled={conversationStep === 5 && !allDone}
+          >
+            {conversationStep === 5 && !allDone ? "Complete the 4 checks" : lastStep ? "We finished this turn" : "Next"}
           </button>
         </div>
       </section>
@@ -114,6 +150,7 @@ function Round({ driver, navigator, onBack, onDone }: RoundProps) {
 
 export default function Home() {
   const [screen, setScreen] = useState(0);
+  const [exampleStep, setExampleStep] = useState(0);
   const [student1, setStudent1] = useState("");
   const [student2, setStudent2] = useState("");
   const [answers, setAnswers] = useState(["", "", ""]);
@@ -121,55 +158,48 @@ export default function Home() {
   const answered = useMemo(() => answers.every((answer) => answer.trim().length > 2), [answers]);
 
   if (screen === 1) {
+    const exampleLines = [
+      { role: "driver", label: `Driver (${student1}) says`, text: "I am showing Sprite 1." },
+      { role: "navigator", label: `Navigator (${student2}) says`, text: "Okay. Which key does it use?" },
+      { role: "driver", label: `Driver (${student1}) says`, text: "It uses the D key. When I click the green flag, the sprite starts at the top and moves down." },
+      { role: "navigator", label: `Navigator (${student2}) says`, text: "Let's test it." },
+      { role: "driver", label: `Driver (${student1}) says`, text: "I clicked the green flag. Sprite 1 moved down. I pressed D at the goal, and the score went up by 1." },
+      { role: "navigator", label: `Navigator (${student2}) says`, text: "It works because I saw the sprite move and the score change." },
+      { role: "driver", label: `Driver (${student1}) says`, text: "Thank you for checking. I am ready to switch." },
+    ];
+    const example = exampleLines[exampleStep];
+    const exampleFinished = exampleStep === exampleLines.length - 1;
+
     return (
       <main className="shell">
         <header className="topbar">
           <span className="eyebrow">Example first</span>
-          <span className="time-chip">Read it together</span>
+          <span className="time-chip">Step {exampleStep + 1} of {exampleLines.length}</span>
         </header>
         <section className="panel example-panel">
           <h1>Watch how it sounds</h1>
           <p className="lead"><strong>{student1}</strong> is the Driver. <strong>{student2}</strong> is the Navigator.</p>
 
-          <div className="conversation" aria-label="Example conversation between a Driver and Navigator">
-            <div className="speech driver-speech">
-              <span>Driver ({student1}) says</span>
-              <p>&quot;I am showing Sprite 1.&quot;</p>
-            </div>
-            <div className="speech navigator-speech">
-              <span>Navigator ({student2}) says</span>
-              <p>&quot;Okay. Which key does it use?&quot;</p>
-            </div>
-            <div className="speech driver-speech">
-              <span>Driver ({student1}) says</span>
-              <p>&quot;It uses the D key. When I click the green flag, the sprite starts at the top and moves down.&quot;</p>
-            </div>
-            <div className="speech navigator-speech">
-              <span>Navigator ({student2}) says</span>
-              <p>&quot;Let&apos;s test it.&quot;</p>
-            </div>
-            <div className="speech driver-speech">
-              <span>Driver ({student1}) says</span>
-              <p>&quot;I clicked the green flag. Sprite 1 moved down. I pressed D at the goal, and the score went up by 1.&quot;</p>
-            </div>
-            <div className="speech navigator-speech">
-              <span>Navigator ({student2}) says</span>
-              <p>&quot;It works because I saw the sprite move and the score change.&quot;</p>
-            </div>
-            <div className="speech driver-speech">
-              <span>Driver ({student1}) says</span>
-              <p>&quot;Thank you for checking. I am ready to switch.&quot;</p>
+          <div className="conversation-stepper" aria-live="polite" aria-label="Example conversation between a Driver and Navigator">
+            <p className="step-instruction">Read this line aloud. Then choose Next.</p>
+            <div className={`speech ${example.role === "driver" ? "driver-speech" : "navigator-speech"}`}>
+              <span>{example.label}</span>
+              <p>&quot;{example.text}&quot;</p>
             </div>
           </div>
 
-          <div className="example-lesson">
-            <strong>What made this good?</strong>
-            <p>The Driver showed one small part. The Navigator asked one clear question. They tested the game together.</p>
-          </div>
+          {exampleFinished && (
+            <div className="example-lesson">
+              <strong>What made this good?</strong>
+              <p>The Driver showed one small part. The Navigator asked one clear question. They tested the game together.</p>
+            </div>
+          )}
 
           <div className="actions">
-            <button className="button secondary" onClick={() => setScreen(0)}>Back</button>
-            <button className="button primary" onClick={() => setScreen(2)}>Now we try it</button>
+            <button className="button secondary" onClick={() => exampleStep > 0 ? setExampleStep((step) => step - 1) : setScreen(0)}>Back</button>
+            <button className="button primary" onClick={() => exampleFinished ? setScreen(2) : setExampleStep((step) => step + 1)}>
+              {exampleFinished ? "Now we try it" : "Next"}
+            </button>
           </div>
         </section>
       </main>
