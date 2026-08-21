@@ -54,27 +54,27 @@ function Round({ driver, navigator, onBack, onDone }: RoundProps) {
 
         <div className="conversation practice-conversation">
           <div className="speech driver-speech">
-            <span>Driver says</span>
+            <span>Driver ({driver}) says</span>
             <p>&quot;I am showing Sprite __.&quot;</p>
           </div>
           <div className="speech navigator-speech">
-            <span>Navigator says</span>
+            <span>Navigator ({navigator}) says</span>
             <p>&quot;Okay. Which key does it use?&quot;</p>
           </div>
           <div className="speech driver-speech">
-            <span>Driver says</span>
+            <span>Driver ({driver}) says</span>
             <p>&quot;It uses the __ key. When I click the green flag, the sprite starts at the top and moves down.&quot;</p>
           </div>
           <div className="speech navigator-speech">
-            <span>Navigator says</span>
+            <span>Navigator ({navigator}) says</span>
             <p>&quot;Let&apos;s test it.&quot;</p>
           </div>
           <div className="action-card">
-            <span>Driver does</span>
+            <span>Driver ({driver}) does</span>
             <p>Click the green flag. Press the key when the sprite reaches the goal.</p>
           </div>
           <div className="check-card">
-            <h2>Navigator checks</h2>
+            <h2>Navigator ({navigator}) checks</h2>
             <p>Keep your hands off the computer. Say &quot;yes&quot; or &quot;not yet.&quot; The Driver clicks the boxes.</p>
             <div className="checklist">
               {checks.map((label, index) => (
@@ -91,12 +91,12 @@ function Round({ driver, navigator, onBack, onDone }: RoundProps) {
             </div>
           </div>
           <div className="speech navigator-speech">
-            <span>Navigator says</span>
+            <span>Navigator ({navigator}) says</span>
             <p>&quot;It works because I saw __.&quot;</p>
             <p className="speech-choice">or &quot;Please check __.&quot;</p>
           </div>
           <div className="speech driver-speech">
-            <span>Driver says</span>
+            <span>Driver ({driver}) says</span>
             <p>&quot;Thank you for checking. I am ready to switch.&quot;</p>
           </div>
         </div>
@@ -133,31 +133,31 @@ export default function Home() {
 
           <div className="conversation" aria-label="Example conversation between a Driver and Navigator">
             <div className="speech driver-speech">
-              <span>Driver</span>
+              <span>Driver ({student1}) says</span>
               <p>&quot;I am showing Sprite 1.&quot;</p>
             </div>
             <div className="speech navigator-speech">
-              <span>Navigator</span>
+              <span>Navigator ({student2}) says</span>
               <p>&quot;Okay. Which key does it use?&quot;</p>
             </div>
             <div className="speech driver-speech">
-              <span>Driver</span>
+              <span>Driver ({student1}) says</span>
               <p>&quot;It uses the D key. When I click the green flag, the sprite starts at the top and moves down.&quot;</p>
             </div>
             <div className="speech navigator-speech">
-              <span>Navigator</span>
+              <span>Navigator ({student2}) says</span>
               <p>&quot;Let&apos;s test it.&quot;</p>
             </div>
             <div className="speech driver-speech">
-              <span>Driver</span>
+              <span>Driver ({student1}) says</span>
               <p>&quot;I clicked the green flag. Sprite 1 moved down. I pressed D at the goal, and the score went up by 1.&quot;</p>
             </div>
             <div className="speech navigator-speech">
-              <span>Navigator</span>
+              <span>Navigator ({student2}) says</span>
               <p>&quot;It works because I saw the sprite move and the score change.&quot;</p>
             </div>
             <div className="speech driver-speech">
-              <span>Driver</span>
+              <span>Driver ({student1}) says</span>
               <p>&quot;Thank you for checking. I am ready to switch.&quot;</p>
             </div>
           </div>
