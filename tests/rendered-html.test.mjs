@@ -38,7 +38,11 @@ test("contains both turns, the switch, and all three reflection prompts", async 
   assert.match(page, /Switch jobs/);
   assert.match(page, /Watch how it sounds/);
   assert.match(page, /Which key does it use\?/);
-  assert.match(page, /I am showing Sprite __\. It uses the __ key\./);
+  assert.match(page, /<span>Driver says<\/span>/);
+  assert.match(page, /<span>Navigator says<\/span>/);
+  assert.match(page, /I am showing Sprite __\./);
+  assert.match(page, /Okay\. Which key does it use\?/);
+  assert.match(page, /Thank you for checking\. I am ready to switch\./);
   assert.match(page, /It works because I saw the sprite move and the score change\./);
   assert.match(page, /What are the two jobs\?/);
   assert.match(page, /How did you respond to feedback\?/);

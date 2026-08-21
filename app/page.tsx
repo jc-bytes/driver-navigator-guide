@@ -52,49 +52,53 @@ function Round({ driver, navigator, onBack, onDone }: RoundProps) {
           <RoleBadge role="Navigator" student={navigator} />
         </div>
 
-        <div className="task-grid">
-          <article className="task driver-task">
-            <span className="step-number">1</span>
-            <div>
-              <h2>Driver shows and tells</h2>
-              <ol>
-                <li>Open one sprite.</li>
-                <li>Point to its key.</li>
-                <li>Explain what the sprite does.</li>
-              </ol>
-              <div className="say-box">
-                <span>Say this</span>
-                <p>&quot;I am showing Sprite __. It uses the __ key. When I click the green flag, the sprite starts at the top and moves down.&quot;</p>
-              </div>
+        <div className="conversation practice-conversation">
+          <div className="speech driver-speech">
+            <span>Driver says</span>
+            <p>&quot;I am showing Sprite __.&quot;</p>
+          </div>
+          <div className="speech navigator-speech">
+            <span>Navigator says</span>
+            <p>&quot;Okay. Which key does it use?&quot;</p>
+          </div>
+          <div className="speech driver-speech">
+            <span>Driver says</span>
+            <p>&quot;It uses the __ key. When I click the green flag, the sprite starts at the top and moves down.&quot;</p>
+          </div>
+          <div className="speech navigator-speech">
+            <span>Navigator says</span>
+            <p>&quot;Let&apos;s test it.&quot;</p>
+          </div>
+          <div className="action-card">
+            <span>Driver does</span>
+            <p>Click the green flag. Press the key when the sprite reaches the goal.</p>
+          </div>
+          <div className="check-card">
+            <h2>Navigator checks</h2>
+            <p>Keep your hands off the computer. Say &quot;yes&quot; or &quot;not yet.&quot; The Driver clicks the boxes.</p>
+            <div className="checklist">
+              {checks.map((label, index) => (
+                <button
+                  className={done[index] ? "check checked" : "check"}
+                  key={label}
+                  onClick={() => toggle(index)}
+                  aria-pressed={done[index]}
+                >
+                  <span aria-hidden="true">{done[index] ? "✓" : index + 1}</span>
+                  {label}
+                </button>
+              ))}
             </div>
-          </article>
-
-          <article className="task navigator-task">
-            <span className="step-number">2</span>
-            <div>
-              <h2>Navigator watches and helps</h2>
-              <p>Keep your hands off the computer. Say &quot;yes&quot; or &quot;not yet.&quot; The Driver clicks the boxes.</p>
-              <div className="checklist">
-                {checks.map((label, index) => (
-                  <button
-                    className={done[index] ? "check checked" : "check"}
-                    key={label}
-                    onClick={() => toggle(index)}
-                    aria-pressed={done[index]}
-                  >
-                    <span aria-hidden="true">{done[index] ? "✓" : index + 1}</span>
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </article>
-        </div>
-
-        <div className="feedback-box">
-          <strong>Navigator gives one helpful sentence</strong>
-          <p>&quot;It works because I saw __.&quot;</p>
-          <p>or &quot;Please check __.&quot;</p>
+          </div>
+          <div className="speech navigator-speech">
+            <span>Navigator says</span>
+            <p>&quot;It works because I saw __.&quot;</p>
+            <p className="speech-choice">or &quot;Please check __.&quot;</p>
+          </div>
+          <div className="speech driver-speech">
+            <span>Driver says</span>
+            <p>&quot;Thank you for checking. I am ready to switch.&quot;</p>
+          </div>
         </div>
 
         <div className="actions">
