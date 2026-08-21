@@ -10,9 +10,9 @@ type RoundProps = {
 };
 
 const checks = [
-  "The Driver showed one Ball sprite.",
+  "The Driver showed one sprite.",
   "The Driver named its key: D, F, J, or K.",
-  "The Driver said what the ball does.",
+  "The Driver said what the sprite does.",
   "We ran the game and watched what happened.",
 ];
 
@@ -45,7 +45,7 @@ function Round({ driver, navigator, onBack, onDone }: RoundProps) {
 
       <section className="panel">
         <h1>Show one small part</h1>
-        <p className="lead">You are not checking the whole game. One Ball is enough.</p>
+        <p className="lead">You are not checking the whole game. One sprite is enough.</p>
 
         <div className="role-grid">
           <RoleBadge role="Driver" student={driver} />
@@ -58,13 +58,13 @@ function Round({ driver, navigator, onBack, onDone }: RoundProps) {
             <div>
               <h2>Driver shows and tells</h2>
               <ol>
-                <li>Open one Ball sprite.</li>
+                <li>Open one sprite.</li>
                 <li>Point to its key.</li>
-                <li>Explain what the ball does.</li>
+                <li>Explain what the sprite does.</li>
               </ol>
               <div className="say-box">
                 <span>Say this</span>
-                <p>&quot;This is Ball __. It uses the __ key. When the game starts, it __.&quot;</p>
+                <p>&quot;This is Sprite __. It uses the __ key. When the game starts, it __.&quot;</p>
               </div>
             </div>
           </article>
@@ -127,7 +127,7 @@ export default function Home() {
           <div className="conversation" aria-label="Example conversation between a Driver and Navigator">
             <div className="speech driver-speech">
               <span>Driver</span>
-              <p>&quot;I am showing Ball 1.&quot;</p>
+              <p>&quot;I am showing Sprite 1.&quot;</p>
             </div>
             <div className="speech navigator-speech">
               <span>Navigator</span>
@@ -135,7 +135,7 @@ export default function Home() {
             </div>
             <div className="speech driver-speech">
               <span>Driver</span>
-              <p>&quot;It uses the D key. When I click the green flag, the ball starts at the top and moves down.&quot;</p>
+              <p>&quot;It uses the D key. When I click the green flag, the sprite starts at the top and moves down.&quot;</p>
             </div>
             <div className="speech navigator-speech">
               <span>Navigator</span>
@@ -143,11 +143,11 @@ export default function Home() {
             </div>
             <div className="speech driver-speech">
               <span>Driver</span>
-              <p>&quot;I clicked the green flag. Ball 1 moved down. I pressed D at the goal, and the score went up by 1.&quot;</p>
+              <p>&quot;I clicked the green flag. Sprite 1 moved down. I pressed D at the goal, and the score went up by 1.&quot;</p>
             </div>
             <div className="speech navigator-speech">
               <span>Navigator</span>
-              <p>&quot;It works because I saw the ball move and the score change.&quot;</p>
+              <p>&quot;It works because I saw the sprite move and the score change.&quot;</p>
             </div>
             <div className="speech driver-speech">
               <span>Driver</span>
@@ -272,7 +272,7 @@ export default function Home() {
         </div>
 
         <div className="plain-rules">
-          <p><strong>The Driver</strong> touches the computer, shows one Ball, and explains it.</p>
+          <p><strong>The Driver</strong> touches the computer, shows one sprite, and explains it.</p>
           <p><strong>The Navigator</strong> keeps hands off, watches, and gives one helpful sentence.</p>
         </div>
 
